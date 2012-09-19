@@ -1,0 +1,185 @@
+ejb-multi-server: EJB applications deployed in different servers communicating vie EJB remote calls
+======================================================
+Author: Wolf-Dieter Fink
+Level: Intermediate, partialy Advanced
+Technologies: EJB remote standalone application
+
+
+What is it?
+-----------
+
+This example demonstrates the communication between standalone clients and JBoss AS7 application server
+
+Also the configuration is done by CLI batch-scripts.
+
+
+The example is composed of multiple maven projects, each with a shared parent. The projects are as follows:
+
+jboss-api      : Different Main classes to demonstrate the usage of the ejb-client API
+jboss-properies: different projects with jboss-ejb-client.poperties
+remoting       : Different clients which are using the (deprecated) remoting-project
+ic-properties  : Different Main classes to demonstrate how the new scoped InitialContext can be used
+
+The root `pom.xml` builds each of the subprojects in the above order.
+
+
+
+System requirements
+-------------------
+
+All you need to build this project is Java 6.0 (Java SDK 1.6) or better, Maven 3.0 or better.
+
+The application this project produces is designed to be run on JBoss Enterprise Application Platform 6 or JBoss AS 7. 
+
+ 
+Configure Maven
+---------------
+
+If you have not yet done so, you must [Configure Maven](../README.md#mavenconfiguration) before testing the quickstarts.
+
+
+Configure necessary Components
+-------------------------
+
+This quickstart requires the ejb-multi-server project. Please follow the instruction of these project to ensure that the JBoss-domain is well configured and the application is correct deployed. You may not need the point "Access the Application" but if you run it you are sure that the project works so far.
+
+Start and configure JBoss Enterprise Application Platform 6 or JBoss AS 7
+-------------------------
+
+With this quickstart scripts are provided to extend the configuration and deployments of the multi-server quickstart.
+
+ * Make sure you have build the multi-server project.
+ * Make sure you have started the JBoss Server as described in the multi-server project.
+ * navigate to the project root directory and run the following command
+ 
+     `JBOSS_HOME/bin/jboss-cli.sh --connect --file=extend-domain.cli`
+     
+ * TODO (necessary?) Restart the domain. This is necessary because of some configurations, otherwise the deploy will not work.
+
+ * Add application user  [Add an Application User](../README.md#addapplicationuser)
+   For some of the examples with security there are additional users with roles needed.
+   To add all necessary users run the following commands, please use this usernames and paswords because the domain configuration and the client use it.
+
+     `bin/add-user.sh -a -u appone -p app++123 --role AppOne --silent`
+
+
+
+Build and access the Quickstart
+-------------------------
+
+_NOTE: The following build command assumes you have configured your Maven user settings. If you have not, you must include Maven setting arguments on the command line. See [Build and Deploy the Quickstarts](../README.md#buildanddeploy) for complete instructions and additional options._
+
+1. Make sure you have started and configured the JBoss Server successful as described above.
+2. Open a command line and navigate to the root directory of this quickstart.
+3. Type this command to build the artifacts:
+
+        mvn clean package
+
+
+
+Access the jboss-properties applications
+---------------------
+
+The different sub-projects in jboss-properties show how the client can be configured with the jboss-ejb-client.properties
+file.
+
+  To run a client change to the directory and type this command
+
+       `mvn exec:exec`
+
+simple-clustered  -  a client which use a clustered application deployed on one or more servers
+-------------------------
+
+To run this example you should change the ejb-multi-server configuration by using the cli-script ***TODO*** to change the server-group of AppOne
+and use a ha configuration and add an additional server apponeB.
+If you run the client it will show that the inital call will retrieve the cluster configuration and the calls are routed to both servers.
+
+The domain configuration can be changed back by using the script ***TODO***
+
+
+Access the jboss-api applications
+---------------------
+
+The different Main-classes show how the EJB-client API can be used.
+Be sure that the preparations are done:
+
+1. Make sure that the deployment are successful as described above.
+2. navigate to the jboss-api root directory of this quickstart.
+
+The SimpleJBossApiClient invoke the AppOne bean by using the EJB-client API without properties. Depend on the given options
+one or more servers are configured within the selector and secured or unsecured methods are called.
+
+   Type this command to run the application
+
+        `mvn exec:java -Dexec.mainClass=org.jboss.as.quickstarts.ejb.clients.SimpleJBossApiClient`
+
+
+Access the ic-properties applications
+---------------------
+
+There are different Main-classes to show the behavior of the scoped InitialContext lookup.
+Be sure that the preparations are done:
+
+1. Make sure that the deployment are successful as described above.
+2. navigate to the ic-properties root directory of this quickstart.
+
+The MultithreadClient will run a single application with two threads where each Thread will access a different server and check whether
+the response is not of a different one.
+
+   Type this command to run the application
+
+        `mvn exec:java -Dexec.mainClass=org.jboss.as.quickstarts.ejb.clients.MultithreadClient`
+        
+        The output of the client will show you that the applications are invoked as expected on different servers:
+
+          Server call statistic : {app1[anonymous]@master:app-one=10}
+          Server call statistic : {app1[anonymous]@master:app-oneA=10}
+          The allowed number of nodes in the threads are called
+
+        The statistic shows that one thread receive 10 times the answer String 'app1[anonymous]@master:app-one' which mean
+        that the application one is called at the server with the node.name 'master:app-one'.
+        The second thread receive 10 times the answer from the server with node.name 'master:app-oneA' which has the same
+        application deployed.
+        Also the message 'The allowed number of nodes in the threads are called' show that all invocations are as expected.
+
+        In the logfiles of the different servers you might follow the invocations on server-side.
+
+_NODE: If the feature is not used the different calles get mixed because the ejb-client is not divided in scopes and the application is invoked 
+by using the identifier (ejb:app/module/Bean!View). In this test the application is deployed on both servers app-one and app-oneA._
+
+
+
+The MultiContentClient use the scoped ejb-client-context to have different proxies for the same application (bean) and invoke these proxies
+in the same thread multiple times and check whether the answer respond the correct server name or one of the expected server-names if it
+is expected for loadbalancing.
+
+   Type this command to run the application
+
+        `mvn exec:java -Dexec.mainClass=org.jboss.as.quickstarts.ejb.clients.MultiContentClient`
+        
+        The output of the client will show you that the applications are invoked as expected on different servers:
+        
+          Call successfully reached the server 'master:app-one'
+          Call successfully reached the server 'master:app-oneA'
+
+        Also messages if a invocation can be reach different server:
+
+          Call successfully reached the server 'master:app-one' out of [master:app-one, master:app-oneA]
+          Call successfully reached the server 'master:app-oneA' out of [master:app-one, master:app-oneA]
+
+        In the logfiles of the different servers you might follow the invocations on server-side.
+
+
+
+Run the Quickstart in JBoss Developer Studio or Eclipse
+-------------------------------------
+You can also start the server and deploy the quickstarts from Eclipse using JBoss tools. For more information, see [Use JBoss Developer Studio or Eclipse to Run the Quickstarts](../README.md#useeclipse) 
+
+Debug the Application
+------------------------------------
+
+If you want to debug the source code or look at the Javadocs of any library in the project, run either of the following commands to pull them into your local repository. The IDE should then detect them.
+
+    mvn dependency:sources
+    mvn dependency:resolve -Dclassifier=javadoc
+
