@@ -113,6 +113,22 @@ one or more servers are configured within the selector and secured or unsecured 
 
         `mvn exec:java -Dexec.mainClass=org.jboss.as.quickstarts.ejb.clients.SimpleJBossApiClient`
 
+The MultithreadCustomScopeClient invoke AppOne and AppTwo beans with different credentials and configurations in parallel.
+
+   Type this command to run the application
+
+        `mvn exec:java -Dexec.mainClass=org.jboss.as.quickstarts.ejb.clients.MultithreadCustomScopeClient`
+
+Related to the implementation you will find the result of 4 threads similar to this:
+Finished with scope : appTwoAsUser  Calls => {app2[quickuser]@master:app-twoA=20}
+Finished with scope : appTwoMixedUsers  Calls => {app2[quickuser2]@master:app-twoB=14, app2[quickuser1]@master:app-twoA=6}
+Finished with scope : appTwoAsUser2  Calls => {app2[quickuser2]@master:app-twoB=10}
+Finished with scope : appOneClusterAsUser1  Calls => {master:app-oneA=11, master:app-oneB=9}
+
+The output shows that the different threads call the application based on the defined scope. The balance of calls might differ in your output
+as the invocation will use a Random approach to select the nodes by default.
+
+
 
 Access the ic-properties applications
 ---------------------
