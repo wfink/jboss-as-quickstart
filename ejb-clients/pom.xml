@@ -34,6 +34,7 @@
 		<module>jboss-properties</module>
 		<module>jboss-api</module>
 		<module>ic-properties</module>
+		<module>remoting</module>
 	</modules>
 
   <properties>
@@ -53,7 +54,8 @@
        to work with JBoss EAP 6. It requires you have access to the JBoss EAP 6 
        maven repository. -->
     <!-- <jboss.bom.version>1.0.0.Final-redhat-1</jboss.bom.version>> -->
-    <jboss.client.bom.version>7.1.1.Final</jboss.client.bom.version>
+    <!-- 7.1.2.Final/EAP6.0.0 is the first ejb-client with multiple servers for the PROVIDER_URL -->
+    <jboss.client.bom.version>7.1.2.Final</jboss.client.bom.version>
 
     <!-- other plugin versions -->
 

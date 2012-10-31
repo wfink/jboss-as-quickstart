@@ -130,6 +130,36 @@ as the invocation will use a Random approach to select the nodes by default.
 
 
 
+Access the remoting-project application clients
+---------------------
+
+The different Main-classes show some use-cases how the client can access the server EJBs in different ways
+Be sure that the preparations are done:
+
+1. Make sure that the deployment are successful as described above.
+2. navigate to the remoting  root directory of this quickstart.
+
+The SimpleJBossRemoteClient will invoke an EJB four times by using the InitialContext with the remoting-project
+
+   Type this command to run the application
+
+        `mvn exec:java -Dexec.mainClass=org.jboss.as.quickstarts.ejb.clients.SimpleJBossRemoteClient`
+
+The invocation use two both server instances, if the first is down with the command
+
+        'JBOSS_HOME/bin/jboss-cli.sh --connect --command="/host=master/server-config=app-oneA:stop"`
+
+the output shows that the invocation will reach the other server automaticaly.
+
+The MultiUserJBossRemoteClient will invoke an EJB with different credentials by using the InitialContext with the remoting-project
+
+   Type this command to run the application
+
+        `mvn exec:java -Dexec.mainClass=org.jboss.as.quickstarts.ejb.clients.MultiUserJBossRemoteClient`
+
+The output will show that the EJB will be invoked with different usernames.
+
+
 Access the ic-properties applications
 ---------------------
 
