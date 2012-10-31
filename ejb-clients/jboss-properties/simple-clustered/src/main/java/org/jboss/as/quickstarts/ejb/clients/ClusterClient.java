@@ -22,13 +22,18 @@ public class ClusterClient {
 
   }
 
-  private static void logging(Level level) {
+  /**
+   * 
+   * @param debug <code>null</code> suppress other messages except this client info messages, <code>FALSE</code> will set all to
+   *        INFO, <code>true</code> set verbose level
+   * @throws NamingException
+   */
+  private static void logging(Boolean debug) {
+    Level l = debug == null ? Level.OFF : debug.booleanValue() ? Level.ALL : Level.INFO;
     // set the global visible level at handler
-    Logger.getLogger("").getHandlers()[0].setLevel(level.intValue()>Level.INFO.intValue() ? Level.INFO : level);
-    // set the level only for relevant classes
-    Logger.getLogger("org.jboss").setLevel(level);
-    Logger.getLogger("org.xnio").setLevel(level);
-    Logger.getLogger(ClusterClient.class.getName()).setLevel(Level.INFO);
+    Logger.getLogger("").getHandlers()[0].setLevel(l.intValue()>Level.INFO.intValue() ? Level.INFO : l);
+    Logger.getLogger("").setLevel(l);
+    LOGGER.setLevel(Boolean.TRUE.equals(debug) ? Level.FINEST : Level.INFO);
   }
 
   private void callAppOne(int noOfInvocations) throws NamingException {
@@ -51,7 +56,7 @@ public class ClusterClient {
    * @throws Exception
    */
   public static void main(String[] args) throws Exception {
-    logging(Level.INFO); // suppress logging
+    logging(null); // suppress logging
     
     ClusterClient main = new ClusterClient();
     main.callAppOne(50);
