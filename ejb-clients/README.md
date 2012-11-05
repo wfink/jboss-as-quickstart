@@ -139,25 +139,31 @@ Be sure that the preparations are done:
 1. Make sure that the deployment are successful as described above.
 2. navigate to the remoting  root directory of this quickstart.
 
+onlyIC  -  clients which use only the properties of the InitialContext to connect to the server
+-------------------------
+
 The SimpleJBossRemoteClient will invoke an EJB four times by using the InitialContext with the remoting-project
 
    Type this command to run the application
 
         `mvn exec:java -Dexec.mainClass=org.jboss.as.quickstarts.ejb.clients.SimpleJBossRemoteClient`
 
-The invocation use two both server instances, if the first is down with the command
+The invocation will use the first server instance, if the first is down with the command
 
         'JBOSS_HOME/bin/jboss-cli.sh --connect --command="/host=master/server-config=app-oneA:stop"`
 
 the output shows that the invocation will reach the other server automaticaly.
+Notice that there is no loadbalancing, because the necessary properties can not be given in this case.
 
-The MultiUserJBossRemoteClient will invoke an EJB with different credentials by using the InitialContext with the remoting-project
+
+The MultiUserJBossRemoteClient will invoke an EJB with different credentials by using the InitialContext and pass different user credentials
 
    Type this command to run the application
 
         `mvn exec:java -Dexec.mainClass=org.jboss.as.quickstarts.ejb.clients.MultiUserJBossRemoteClient`
 
 The output will show that the EJB will be invoked with different usernames.
+
 
 
 Access the ic-properties applications

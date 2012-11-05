@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.jboss.as.quickstarts</groupId>
+		<artifactId>jboss-as-ejb-clients</artifactId>
+		<version>7.1.1-FINAL</version>
+	</parent>
+
+	<artifactId>jboss-as-ejb-clients-remoting-onlyIC</artifactId>
+	<name>JBoss AS Quickstarts: EJB clients with the remoting project</name>
+	<packaging>jar</packaging>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.jboss</groupId>
+			<artifactId>jboss-ejb-client</artifactId>
+		</dependency>
+
+		<!-- add the dependency to the ejb-multi-server project to access the EJBs deployed there -->		
+		<dependency>
+			<groupId>org.jboss.as.quickstarts</groupId>
+			<artifactId>
+				jboss-as-ejb-multi-server-appOne-ejb
+			</artifactId>
+			<version>${project.version}</version>
+			<type>ejb</type>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.as.quickstarts</groupId>
+			<artifactId>
+				jboss-as-ejb-multi-server-appTwo-ejb
+			</artifactId>
+			<version>${project.version}</version>
+			<type>ejb</type>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.as.quickstarts</groupId>
+			<artifactId>
+				jboss-as-ejb-multi-server-appMain-ejb
+			</artifactId>
+			<version>${project.version}</version>
+			<type>ejb</type>
+		</dependency>
+	</dependencies>
+	
+	<build>
+		<plugins>
+			<!-- Add the maven exec plugin to allow us to run a java program via maven -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.2.1</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>java</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>
