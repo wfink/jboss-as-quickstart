@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.jboss.as.quickstarts</groupId>
 		<artifactId>jboss-as-ejb-clients-jboss-properties</artifactId>
-		<version>7.1.1-FINAL</version>
+		<version>7.1.2-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>jboss-as-ejb-clients-jboss-properties-simple-clustered</artifactId>

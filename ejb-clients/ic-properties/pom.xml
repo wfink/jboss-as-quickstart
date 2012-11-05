@@ -31,7 +31,7 @@ Available with the EJBCLIENT-34 feature.</description>
 	<parent>
 		<groupId>org.jboss.as.quickstarts</groupId>
 		<artifactId>jboss-as-ejb-clients</artifactId>
-		<version>7.1.1-FINAL</version>
+		<version>7.1.2-SNAPSHOT</version>
 	</parent>
 
 	<dependencies>
