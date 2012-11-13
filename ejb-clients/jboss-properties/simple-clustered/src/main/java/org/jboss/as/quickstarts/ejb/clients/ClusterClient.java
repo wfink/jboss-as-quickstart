@@ -56,7 +56,7 @@ public class ClusterClient {
    * @throws Exception
    */
   public static void main(String[] args) throws Exception {
-    logging(null); // suppress logging
+    logging(false); // suppress logging
     
     ClusterClient main = new ClusterClient();
     main.callAppOne(50);
