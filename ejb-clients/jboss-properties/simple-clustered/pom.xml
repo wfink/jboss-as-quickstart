@@ -52,6 +52,7 @@
             <argument>-classpath</argument>
             <classpath></classpath>
             <argument>org.jboss.as.quickstarts.ejb.clients.ClusterClient</argument>
+            <argument>-d</argument>
           </arguments>
         </configuration>
 			</plugin>

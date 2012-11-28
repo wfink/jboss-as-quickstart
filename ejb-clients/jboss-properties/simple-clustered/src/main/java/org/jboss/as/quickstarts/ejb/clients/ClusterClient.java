@@ -1,3 +1,19 @@
+/*
+ * JBoss, Home of Professional Open Source
+ * Copyright 2012, Red Hat, Inc. and/or its affiliates, and individual
+ * contributors by the @authors tag. See the copyright.txt in the 
+ * distribution for a full listing of individual contributors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,  
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.jboss.as.quickstarts.ejb.clients;
 
 import java.util.HashMap;
@@ -11,29 +27,30 @@ import javax.naming.NamingException;
 
 import org.jboss.as.quickstarts.ejb.multi.server.app.AppOne;
 
+/**
+ * A simple standalone client to demonstrate how to call clustered EJB's with the  jboss-ejb-client.properties file
+ * configuration.
+ * 
+ * @author <a href="mailto:wfink@redhat.com">Wolf-Dieter Fink</a>
+ */
 public class ClusterClient {
   private static final Logger LOGGER = Logger.getLogger(ClusterClient.class.getName());
   private final InitialContext context;
 
-  private ClusterClient() throws NamingException {
-    Properties props = new Properties();
-    props.put(Context.URL_PKG_PREFIXES, "org.jboss.ejb.client.naming");
-    context = new InitialContext(props);
-
-  }
-
   /**
-   * 
    * @param debug <code>null</code> suppress other messages except this client info messages, <code>FALSE</code> will set all to
    *        INFO, <code>true</code> set verbose level
    * @throws NamingException
    */
-  private static void logging(Boolean debug) {
-    Level l = debug == null ? Level.OFF : debug.booleanValue() ? Level.ALL : Level.INFO;
-    // set the global visible level at handler
-    Logger.getLogger("").getHandlers()[0].setLevel(l.intValue()>Level.INFO.intValue() ? Level.INFO : l);
+  private ClusterClient(Boolean debug) throws NamingException {
+    Level l = debug == null ? Level.SEVERE : debug.booleanValue() ? Level.ALL : Level.INFO;
     Logger.getLogger("").setLevel(l);
-    LOGGER.setLevel(Boolean.TRUE.equals(debug) ? Level.FINEST : Level.INFO);
+    Logger.getLogger("").getHandlers()[0].setLevel(Level.ALL);
+    Logger.getLogger(ClusterClient.class.getPackage().getName()).setLevel(debug != null ? Level.FINEST : Level.INFO);
+
+    Properties props = new Properties();
+    props.put(Context.URL_PKG_PREFIXES, "org.jboss.ejb.client.naming");
+    context = new InitialContext(props);
   }
 
   private void callAppOne(int noOfInvocations) throws NamingException {
@@ -52,13 +69,27 @@ public class ClusterClient {
   }
   
   /**
-   * @param args
+   * @param args it is possible to change the logging behavior. If no debug parameter is given
+   *        only this class is verbose in INFO mode.
+   *        <ul>
+   *        <li>-d flag, whether all classes should be in INFO mode.</li>
+   *        <li>-D flag, whether all classes should be in verbose TRACE mode</li>
+   *        </ul>
+   * 
    * @throws Exception
    */
   public static void main(String[] args) throws Exception {
-    logging(false); // suppress logging
+    Boolean debug = null;
+
+    for (int i = 0; i < args.length; i++) {
+      if (args[i].equals("-d")) {
+        debug = debug == null ? Boolean.FALSE : Boolean.TRUE;
+      } else if (args[i].equals("-D")) {
+        debug = Boolean.TRUE;
+      }
+    }
     
-    ClusterClient main = new ClusterClient();
+    ClusterClient main = new ClusterClient(debug);
     main.callAppOne(50);
     }
 
