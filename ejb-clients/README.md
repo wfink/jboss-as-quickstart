@@ -100,11 +100,21 @@ Be sure that the preparations are done:
 1. Make sure that the deployment are successful as described above.
 2. navigate to the jboss-api root directory of this quickstart.
 
+
+The maven command can have additional options set with '-Dexec.args=""', depend on the use-case the following options are available:
+-U         suppress use of default user 'quickuser' (if no -u is given)
+-u <user>  use the specified user
+-p <psw>   and password
+-d | -D    increment debug level
+-s | -S    call the secured method (add|only), notice that a user must be used with a role AppOne or AppTwo is necessary.
+
 Access with a simple client
 -------------------------
 
-The SimpleJBossApiClient invoke the AppOne bean by using the EJB-client API without properties. Depend on the given options
-one or more servers are configured within the selector and secured or unsecured methods are called.
+The SimpleJBossApiClient invoke the AppTwo bean by using the EJB-client API without  a properties file. Depend on the given options
+secured and/or unsecured methods are called.
+As there are two nodes (app-twoA, app-twoB) configured both are used, also a NodeSelector is installed and depend on the strategy the nodes
+are called with different load factors.
 
    Type this command to run the application
 
