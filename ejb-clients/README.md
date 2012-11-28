@@ -120,6 +120,20 @@ are called with different load factors.
 
         `mvn exec:java -Dexec.mainClass=org.jboss.as.quickstarts.ejb.clients.SimpleJBossApiClient`
 
+Access in a clustered environment
+-------------------------
+
+The AppOneClusterJBossApiClient invoke AppOne which is deployed in a two node cluster.
+The implementation of ClusterNodeSelector will change the behaviour and use all available nodes of the cluster, the default is to use only
+the number of connected nodes which is 10 by default.
+
+   Type this command to run the application
+
+        `mvn exec:java -Dexec.mainClass=org.jboss.as.quickstarts.ejb.clients.AppOneClusterJBossApiClient`
+
+The client try to invoke the EJB 20 times, the output shows which node is selected for every call.
+
+
 Access in a multi thread environment
 -------------------------
 
