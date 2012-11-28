@@ -36,7 +36,6 @@
 
 	<modules>
 		<module>onlyIC</module>
-		<module>clustered</module>
 	</modules>
 </project>
 

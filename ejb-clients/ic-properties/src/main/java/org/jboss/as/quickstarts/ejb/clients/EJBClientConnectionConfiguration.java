@@ -25,7 +25,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 
 /**
- * Utility class to handle the JNDI properties of a ejb-client context.
+ * Utility class to handle the JNDI properties of a scoped ejb-client context.
  * 
  * @author <a href="mailto:wfink@redhat.com">Wolf-Dieter Fink</a>
  */

@@ -1,15 +1,15 @@
-ejb-multi-server: EJB applications deployed in different servers communicating vie EJB remote calls
+ejb-clients: Standalone clients calling remote EJB applications
 ======================================================
 Author: Wolf-Dieter Fink
-Level: Intermediate, partialy Advanced
+Level: Intermediate ... Advanced
 Technologies: EJB remote standalone application
+Summary: Show how to access EJB's from a remote standalone client
 
 
 What is it?
 -----------
 
 This example demonstrates the communication between standalone clients and JBoss AS7 application server
-
 Also the configuration is done by CLI batch-scripts.
 
 
@@ -19,6 +19,7 @@ jboss-api      : Different Main classes to demonstrate the usage of the ejb-clie
 jboss-properies: different projects with jboss-ejb-client.poperties
 remoting       : Different clients which are using the (deprecated) remoting-project
 ic-properties  : Different Main classes to demonstrate how the new scoped InitialContext can be used
+
 
 The root `pom.xml` builds each of the subprojects in the above order.
 
@@ -49,13 +50,7 @@ Start and configure JBoss Enterprise Application Platform 6 or JBoss AS 7
 With this quickstart scripts are provided to extend the configuration and deployments of the multi-server quickstart.
 
  * Make sure you have build the multi-server project.
- * Make sure you have started the JBoss Server as described in the multi-server project.
- * navigate to the project root directory and run the following command
- 
-     `JBOSS_HOME/bin/jboss-cli.sh --connect --file=extend-domain.cli`
-     
- * TODO (necessary?) Restart the domain. This is necessary because of some configurations, otherwise the deploy will not work.
-
+ * Make sure you have started the JBoss Server and deployed the multi-server applications as described in the multi-server project.
  * Add application user  [Add an Application User](../README.md#addapplicationuser)
    For some of the examples with security there are additional users with roles needed.
    To add all necessary users run the following commands, please use this usernames and paswords because the domain configuration and the client use it.
@@ -83,18 +78,17 @@ Access the jboss-properties applications
 The different sub-projects in jboss-properties show how the client can be configured with the jboss-ejb-client.properties
 file.
 
-  To run a client change to the directory and type this command
+  To run a client change to the sub-project directory and type this command
 
        `mvn exec:exec`
+
 
 simple-clustered  -  a client which use a clustered application deployed on one or more servers
 -------------------------
 
-To run this example you should change the ejb-multi-server configuration by using the cli-script ***TODO*** to change the server-group of AppOne
-and use a ha configuration and add an additional server apponeB.
-If you run the client it will show that the inital call will retrieve the cluster configuration and the calls are routed to both servers.
+This example shows that the configuration contains only the initial server and the server provide a list of all servers within the cluster which are used by using the 'remote.cluster.* configuration.
 
-The domain configuration can be changed back by using the script ***TODO***
+_NOTE: For a real environment you should add more that one node of the cluster that the connection can be established without a single point of failure._
 
 
 Access the jboss-api applications
@@ -106,12 +100,18 @@ Be sure that the preparations are done:
 1. Make sure that the deployment are successful as described above.
 2. navigate to the jboss-api root directory of this quickstart.
 
+Access with a simple client
+-------------------------
+
 The SimpleJBossApiClient invoke the AppOne bean by using the EJB-client API without properties. Depend on the given options
 one or more servers are configured within the selector and secured or unsecured methods are called.
 
    Type this command to run the application
 
         `mvn exec:java -Dexec.mainClass=org.jboss.as.quickstarts.ejb.clients.SimpleJBossApiClient`
+
+Access in a multi thread environment
+-------------------------
 
 The MultithreadCustomScopeClient invoke AppOne and AppTwo beans with different credentials and configurations in parallel.
 
@@ -127,7 +127,6 @@ Finished with scope : appOneClusterAsUser1  Calls => {master:app-oneA=11, master
 
 The output shows that the different threads call the application based on the defined scope. The balance of calls might differ in your output
 as the invocation will use a Random approach to select the nodes by default.
-
 
 
 Access the remoting-project application clients
@@ -153,7 +152,8 @@ The invocation will use the first server instance, if the first is down with the
         'JBOSS_HOME/bin/jboss-cli.sh --connect --command="/host=master/server-config=app-oneA:stop"`
 
 the output shows that the invocation will reach the other server automaticaly.
-Notice that there is no loadbalancing, because the necessary properties can not be given in this case.
+
+_NOTE: Notice that there is no loadbalancing, because the necessary properties can not be given in this case._
 
 
 The MultiUserJBossRemoteClient will invoke an EJB with different credentials by using the InitialContext and pass different user credentials
@@ -165,14 +165,18 @@ The MultiUserJBossRemoteClient will invoke an EJB with different credentials by 
 The output will show that the EJB will be invoked with different usernames.
 
 
-
 Access the ic-properties applications
 ---------------------
 
-There are different Main-classes to show the behavior of the scoped InitialContext lookup.
+The different clients show the behaviour of the new client feature 'scoped context', introduced by the feature request EJBCLIENT-34 and implemented 
+in AS7.2.
+
+_NOTE: You have to use the server and client library version 7.2 or higher of JBossAS._
+
+The different Main-classes show the behavior of the scoped InitialContext lookup.
 Be sure that the preparations are done:
 
-1. Make sure that the deployment are successful as described above.
+1. Make sure that the installation and deployment of the multi-server quickstart is successful as described above.
 2. navigate to the ic-properties root directory of this quickstart.
 
 The MultithreadClient will run a single application with two threads where each Thread will access a different server and check whether
@@ -182,21 +186,22 @@ the response is not of a different one.
 
         `mvn exec:java -Dexec.mainClass=org.jboss.as.quickstarts.ejb.clients.MultithreadClient`
         
-        The output of the client will show you that the applications are invoked as expected on different servers:
+The output of the client will show you that the applications are invoked as expected on different servers:
 
-          Server call statistic : {app1[anonymous]@master:app-one=10}
-          Server call statistic : {app1[anonymous]@master:app-oneA=10}
+Server call statistic : {app1[anonymous]@master:app-one=10}
+Server call statistic : {app1[anonymous]@master:app-oneA=10}
+
           The allowed number of nodes in the threads are called
 
-        The statistic shows that one thread receive 10 times the answer String 'app1[anonymous]@master:app-one' which mean
-        that the application one is called at the server with the node.name 'master:app-one'.
-        The second thread receive 10 times the answer from the server with node.name 'master:app-oneA' which has the same
-        application deployed.
-        Also the message 'The allowed number of nodes in the threads are called' show that all invocations are as expected.
+The statistic shows that one thread receive 10 times the answer String 'app1[anonymous]@master:app-one' which mean
+that the application one is called at the server with the node.name 'master:app-one'.
+The second thread receive 10 times the answer from the server with node.name 'master:app-oneA' which has the same
+application deployed.
+Also the message 'The allowed number of nodes in the threads are called' show that all invocations are as expected.
 
-        In the logfiles of the different servers you might follow the invocations on server-side.
+In the logfiles of the different servers you might follow the invocations on server-side.
 
-_NODE: If the feature is not used the different calles get mixed because the ejb-client is not divided in scopes and the application is invoked 
+_NOTE: If the feature is not used the different calles get mixed because the ejb-client is not divided in scopes and the application is invoked 
 by using the identifier (ejb:app/module/Bean!View). In this test the application is deployed on both servers app-one and app-oneA._
 
 
