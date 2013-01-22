@@ -35,6 +35,7 @@
 		<module>jboss-api</module>
 		<module>ic-properties</module>
 		<module>remoting</module>
+		<module>server</module>
 	</modules>
 
   <properties>
@@ -64,6 +65,8 @@
     <compiler.source>1.6</compiler.source>
 
     <exec.plugin.version>1.2.1</exec.plugin.version>
+    <ejb.plugin.version>2.3</ejb.plugin.version>
+    <ear.plugin.version>2.6</ear.plugin.version>
   </properties>
 
 

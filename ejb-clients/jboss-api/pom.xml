@@ -12,21 +12,24 @@
 	<packaging>jar</packaging>
 
 	<dependencies>
-		<dependency>
-			<groupId>org.jboss</groupId>
-			<artifactId>jboss-ejb-client</artifactId>
-			<version>1.0.10.Final</version>
-		</dependency>
 
 		<!-- add the dependency to the ejb-multi-server project to access the EJBs deployed there -->		
 		<dependency>
-			<groupId>org.jboss.as.quickstarts</groupId>
-			<artifactId>
-				jboss-as-ejb-multi-server-appOne-ejb
-			</artifactId>
-			<version>${project.version}</version>
-			<type>ejb</type>
-		</dependency>
+      <groupId>org.jboss.as.quickstarts</groupId>
+      <artifactId>
+        jboss-as-ejb-clients-server-ejb
+      </artifactId>
+      <version>${project.version}</version>
+      <type>ejb</type>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.as.quickstarts</groupId>
+      <artifactId>
+        jboss-as-ejb-multi-server-appOne-ejb
+      </artifactId>
+      <version>${project.version}</version>
+      <type>ejb</type>
+    </dependency>
 		<dependency>
 			<groupId>org.jboss.as.quickstarts</groupId>
 			<artifactId>
@@ -42,6 +45,11 @@
 			</artifactId>
 			<version>${project.version}</version>
 			<type>ejb</type>
+		</dependency>
+		<dependency>
+		  <groupId>org.jboss</groupId>
+		  <artifactId>jboss-ejb-client</artifactId>
+		  <version>1.0.16.Final-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 	

@@ -15,10 +15,11 @@ Also the configuration is done by CLI batch-scripts.
 
 The example is composed of multiple maven projects, each with a shared parent. The projects are as follows:
 
-jboss-api      : Different Main classes to demonstrate the usage of the ejb-client API
 jboss-properies: different projects with jboss-ejb-client.poperties
-remoting       : Different clients which are using the (deprecated) remoting-project
+jboss-api      : Different Main classes to demonstrate the usage of the ejb-client API
+remote-naming  : Different clients which are using the (deprecated) remote-naming-project
 ic-properties  : Different Main classes to demonstrate how the new scoped InitialContext can be used
+server         : Additional server application to demonstrate property transfer from client to server
 
 
 The root `pom.xml` builds each of the subprojects in the above order.
@@ -52,7 +53,7 @@ With this quickstart scripts are provided to extend the configuration and deploy
  * Make sure you have build the multi-server project.
  * Make sure you have started the JBoss Server and deployed the multi-server applications as described in the multi-server project.
  * Add application user  [Add an Application User](../README.md#addapplicationuser)
-   For some of the examples with security there are additional users with roles needed.
+   For some of the examples with security there are additional users with roles needed.  **TODO** check whether it is still necessary **TODO**
    To add all necessary users run the following commands, please use this usernames and paswords because the domain configuration and the client use it.
 
      `bin/add-user.sh -a -u appone -p app++123 --role AppOne --silent`
@@ -72,7 +73,7 @@ _NOTE: The following build command assumes you have configured your Maven user s
 
 
 
-Access the jboss-properties applications
+Access the **jboss-properties** applications
 ---------------------
 
 The different sub-projects in jboss-properties show how the client can be configured with the jboss-ejb-client.properties
@@ -90,8 +91,9 @@ This example shows that the configuration contains only the initial server and t
 
 _NOTE: For a real environment you should add more that one node of the cluster that the connection can be established without a single point of failure._
 
+**TODO** check erst ein projekt
 
-Access the jboss-api applications
+Access the **jboss-api** applications
 ---------------------
 
 The different Main-classes show how the EJB-client API can be used.
@@ -101,7 +103,7 @@ Be sure that the preparations are done:
 2. navigate to the jboss-api root directory of this quickstart.
 
 
-The maven command can have additional options set with '-Dexec.args=""', depend on the use-case the following options are available:
+The maven command can have additional options set with '-Dexec.args=""', depend on the test clients the following options are available:
 -U         suppress use of default user 'quickuser' (if no -u is given)
 -u <user>  use the specified user
 -p <psw>   and password
@@ -153,14 +155,35 @@ The output shows that the different threads call the application based on the de
 as the invocation will use a Random approach to select the nodes by default.
 
 
-Access the remoting-project application clients
+Use a Interceptor at client side
+-------------------------
+
+The AppWithCLientInterceptor is configured with two client side interceptors. The invokation contain attached properties to the context, beside the method parameters. A server side Interceptor and the EJB itselve will log these properties.
+The interceptor configuration shows the priority settings of the interceptor registration.
+
+   Type this command to run the application
+
+        `mvn exec:java -Dexec.mainClass=org.jboss.as.quickstarts.ejb.clients.ApWithClientInterceptor`
+
+The server.log show that the property 'Param' is readable at server side.
+**TODO** return of context will not work ??? bug ???
+
+This feature will not work in EAP6.0.0 because of JIRA **TODO**, it can be used with 7.1.?? and 7.2.x
+
+
+Access the **remote-naming** application clients
 ---------------------
+
+The remote-naming project is a replacement for the jnp-project. The properties can be passed in a similar way, but the functionality less.
+If the remote-naming is used the underlying libraries are still the jboss-ejb-client api but the necessary configuration and selectors are
+created automaticaly. For more information see [] **TODO**
 
 The different Main-classes show some use-cases how the client can access the server EJBs in different ways
 Be sure that the preparations are done:
 
 1. Make sure that the deployment are successful as described above.
 2. navigate to the remoting  root directory of this quickstart.
+
 
 onlyIC  -  clients which use only the properties of the InitialContext to connect to the server
 -------------------------
@@ -189,13 +212,13 @@ The MultiUserJBossRemoteClient will invoke an EJB with different credentials by 
 The output will show that the EJB will be invoked with different usernames.
 
 
-Access the ic-properties applications
+Access the **ic-properties** applications
 ---------------------
 
 The different clients show the behaviour of the new client feature 'scoped context', introduced by the feature request EJBCLIENT-34 and implemented 
 in AS7.2.
 
-_NOTE: You have to use the server and client library version 7.2 or higher of JBossAS._
+_NOTE: You have to use the server and client library version 7.2 or higher of JBossAS. If you use maven or eclipse to start the test clients the maven dependencies overwrite the standard settings and use a jboss-ejb-client library which support this. This is only for demonstration, in production you have to use a client server combination which fully support this feature!_
 
 The different Main-classes show the behavior of the scoped InitialContext lookup.
 Be sure that the preparations are done:
@@ -212,7 +235,7 @@ the response is not of a different one.
         
 The output of the client will show you that the applications are invoked as expected on different servers:
 
-Server call statistic : {app1[anonymous]@master:app-one=10}
+Server call statistic : {app1[anonymous]@master:app-one=10}  **TODO** stimmt nicht mehr
 Server call statistic : {app1[anonymous]@master:app-oneA=10}
 
           The allowed number of nodes in the threads are called
@@ -225,8 +248,7 @@ Also the message 'The allowed number of nodes in the threads are called' show th
 
 In the logfiles of the different servers you might follow the invocations on server-side.
 
-_NOTE: If the feature is not used the different calles get mixed because the ejb-client is not divided in scopes and the application is invoked 
-by using the identifier (ejb:app/module/Bean!View). In this test the application is deployed on both servers app-one and app-oneA._
+_NOTE: If the feature is not used correctly the different calles get mixed because the ejb-client is not divided in scopes and the application is invoked by using the identifier (ejb:app/module/Bean!View). In this test the application is deployed on both servers app-one and app-oneA._
 
 
 
@@ -238,17 +260,17 @@ is expected for loadbalancing.
 
         `mvn exec:java -Dexec.mainClass=org.jboss.as.quickstarts.ejb.clients.MultiContentClient`
         
-        The output of the client will show you that the applications are invoked as expected on different servers:
+The output of the client will show you that the applications are invoked as expected on different servers:
         
-          Call successfully reached the server 'master:app-one'
-          Call successfully reached the server 'master:app-oneA'
+       Call successfully reached the server 'master:app-one'
+       Call successfully reached the server 'master:app-oneA'
 
-        Also messages if a invocation can be reach different server:
+Also messages if a invocation can be reach different server:
 
-          Call successfully reached the server 'master:app-one' out of [master:app-one, master:app-oneA]
-          Call successfully reached the server 'master:app-oneA' out of [master:app-one, master:app-oneA]
+       Call successfully reached the server 'master:app-one' out of [master:app-one, master:app-oneA]
+       Call successfully reached the server 'master:app-oneA' out of [master:app-one, master:app-oneA]
 
-        In the logfiles of the different servers you might follow the invocations on server-side.
+In the logfiles of the different servers you might follow the invocations on server-side.
 
 
 
