@@ -163,7 +163,7 @@ The interceptor configuration shows the priority settings of the interceptor reg
 
    Type this command to run the application
 
-        `mvn exec:java -Dexec.mainClass=org.jboss.as.quickstarts.ejb.clients.ApWithClientInterceptor`
+        `mvn exec:java -Dexec.mainClass=org.jboss.as.quickstarts.ejb.clients.AppWithClientInterceptor`
 
 The server.log show that the property 'Param' is readable at server side.
 **TODO** return of context will not work ??? bug ???
