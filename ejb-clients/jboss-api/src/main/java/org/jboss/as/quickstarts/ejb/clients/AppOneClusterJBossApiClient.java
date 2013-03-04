@@ -76,25 +76,26 @@ public class AppOneClusterJBossApiClient {
     p.put("remote.connection.appOne.connect.options.org.xnio.Options.SASL_DISALLOWED_MECHANISMS", "JBOSS-LOCAL-USER");
     p.put("remote.connection.appOne.connect.options.org.xnio.Options.SASL_POLICY_NOANONYMOUS", "false");
 
-    p.put("remote.clusters", "ejb");
-    p.put("remote.cluster.ejb.connect.options.org.xnio.Options.SSL_ENABLED", "false");
-    p.put("remote.cluster.ejb.connect.options.org.xnio.Options.SASL_POLICY_NOANONYMOUS", "false");
-    p.put("remote.cluster.ejb.connect.options.org.xnio.Options.SASL_DISALLOWED_MECHANISMS", "JBOSS-LOCAL-USER");
-    p.put("remote.cluster.ejb.clusternode.selector", AllClusterNodeSelector.class.getName());
+    final String clusterName = "ejb";
+    p.put("remote.clusters", clusterName);
+    p.put("remote.cluster."+clusterName+".connect.options.org.xnio.Options.SSL_ENABLED", "false");
+    p.put("remote.cluster."+clusterName+".connect.options.org.xnio.Options.SASL_POLICY_NOANONYMOUS", "false");
+    p.put("remote.cluster."+clusterName+".connect.options.org.xnio.Options.SASL_DISALLOWED_MECHANISMS", "JBOSS-LOCAL-USER");
+    p.put("remote.cluster."+clusterName+".clusternode.selector", AllClusterNodeSelector.class.getName());
     // this property will not work until EJBCLIENT-57 is integrated, the number of initial connected nodes is >>
-    p.put("remote.cluster.ejb.max-allowed-connected-nodes", String.valueOf(1));
+    p.put("remote.cluster."+clusterName+".max-allowed-connected-nodes", String.valueOf(1));
 
     if (this.user != null) {
       // If the username is given add to properties
       p.put("remote.connection.appOne.username", this.user);
       p.put("remote.connection.appOne.password", this.password);
-      p.put("remote.cluster.ejb.username", this.user);
-      p.put("remote.cluster.ejb.password", this.password);
+      p.put("remote.cluster."+clusterName+".username", this.user);
+      p.put("remote.cluster."+clusterName+".password", this.password);
     } else if (this.useDefaultCredentials) {
       p.put("remote.connection.appOne.username", "quickuser");
       p.put("remote.connection.appOne.password", "quick-123");
-      p.put("remote.cluster.ejb.username", "quickuser");
-      p.put("remote.cluster.ejb.password", "quick-123");
+      p.put("remote.cluster."+clusterName+".username", "quickuser");
+      p.put("remote.cluster."+clusterName+".password", "quick-123");
     }
 
     LOGGER.info("PARAMS : " + p);
