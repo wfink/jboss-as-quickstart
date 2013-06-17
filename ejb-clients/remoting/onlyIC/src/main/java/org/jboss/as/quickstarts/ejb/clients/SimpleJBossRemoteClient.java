@@ -67,7 +67,9 @@ public class SimpleJBossRemoteClient {
         p.put(javax.naming.Context.INITIAL_CONTEXT_FACTORY, "org.jboss.naming.remote.client.InitialContextFactory");
         p.put(javax.naming.Context.PROVIDER_URL, "remote://localhost:4547,remote://localhost:5147");
         p.put("jboss.naming.client.ejb.context", true);
-        p.put("connect.timeout", true);
+        // set the initial connection timeout to 1sec
+        p.put("jboss.naming.client.connect.timeout", "1000");
+
         if(this.user != null) {
             // If the username is given add to properties
             p.put(javax.naming.Context.SECURITY_PRINCIPAL, this.user);
@@ -76,15 +78,17 @@ public class SimpleJBossRemoteClient {
             p.put(javax.naming.Context.SECURITY_PRINCIPAL, "quickuser");
             p.put(javax.naming.Context.SECURITY_CREDENTIALS, "quick-123");
         }
-        
-        p.put("remote.clusters", "ejb");
-        p.put("remote.cluster.ejb.connect.options.org.xnio.Options.SSL_ENABLED", "false");
-        p.put("remote.cluster.ejb.max-allowed-connected-nodes", String.valueOf(2));
 
         LOGGER.info("PARAMS : "+p);
         this.context = new InitialContext(p);
     }
     
+    /**
+     * To close the underlying physical connection the created InitialContext needs to be closed!
+     * All proxies which are looked up by this context are invalid after the context is closed.
+     * 
+     * @throws NamingException
+     */
     private void closeContext() throws NamingException {
       if(this.context != null) {
         this.context.close();
@@ -110,13 +114,15 @@ public class SimpleJBossRemoteClient {
     }
     
     /**
+     * Invoke the appOne bean several times by using the remote-naming approach.
+     * 
      * @param args it is possible to change the user/password and whether secured methods should be called
      *             <ul>
      *             <li>-u &lt;username&gt;</li>
      *             <li>-p &lt;password&gt;</li>
      *             <li>-s flag, if given the secured method is called in addition to the unsecured</li>
      *             <li>-S flag, if given only the secured method is called</li>
-     *             <li>-l use default credentials of the ejb-multi-server project (if the server is not local)</li>
+     *             <li>-l suppress the use of default credentials (ejb-multi-server project), will only work if the server is local</li>
      *             </ul>
      *             
      * @throws NamingException problem with InitialContext creation or lookup
@@ -124,7 +130,6 @@ public class SimpleJBossRemoteClient {
     public static void main(String[] args) throws NamingException {
         Boolean secured = null;
         boolean local = false;
-//      String user="quickuser", passwd="quick-123";
         String user=null, passwd=null;
         Boolean debug = null;
         
