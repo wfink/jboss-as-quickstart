@@ -19,10 +19,10 @@
 		<version>7.1.2-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>jboss-as-ejb-clients-remoting</artifactId>
+	<artifactId>jboss-as-ejb-clients-remote-naming</artifactId>
 	<packaging>pom</packaging>
-	<name>JBoss AS Quickstarts: - Standalone applications using the remoting project - Root pom</name>
-	<description>ejb-clients: A scenario with different clients using the remoting project to access applications deployed on different servers</description>
+	<name>JBoss AS Quickstarts: - Standalone applications using the remote naming project - Root pom</name>
+	<description>ejb-clients: A scenario with different clients using the remote naming project to access applications deployed on different servers</description>
 
 	<url>http://jboss.org/jbossas</url>
 	<licenses>

@@ -34,7 +34,7 @@
 		<module>jboss-properties</module>
 		<module>jboss-api</module>
 		<module>ic-properties</module>
-		<module>remoting</module>
+		<module>remote-naming</module>
 		<module>server</module>
 	</modules>
 

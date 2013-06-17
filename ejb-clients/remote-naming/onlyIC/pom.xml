@@ -3,12 +3,12 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.jboss.as.quickstarts</groupId>
-		<artifactId>jboss-as-ejb-clients-remoting</artifactId>
+		<artifactId>jboss-as-ejb-clients-remote-naming</artifactId>
 		<version>7.1.2-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>jboss-as-ejb-clients-remoting-onlyIC</artifactId>
-	<name>JBoss AS Quickstarts: EJB clients with the remoting project</name>
+	<artifactId>jboss-as-ejb-clients-remote-naming-onlyIC</artifactId>
+	<name>JBoss AS Quickstarts: EJB clients with the remote-naming project</name>
 	<packaging>jar</packaging>
 
 	<dependencies>
