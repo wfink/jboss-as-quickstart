@@ -13,11 +13,11 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>jboss-as-ejb-clients-ic-properties</artifactId>
+	<artifactId>jboss-as-ejb-clients-scoped-context</artifactId>
 
-	<name>JBoss AS Quickstarts: Standalone applications - multi content IC</name>
+	<name>JBoss AS Quickstarts: Standalone applications - InitialContext with scoped-context</name>
 	<description>The new scoped access via property configured InitialContext.
-Available with the EJBCLIENT-34 feature.</description>
+Available with the EJBCLIENT-34 feature in EAP6.1 or AS7.2.</description>
 	<packaging>jar</packaging>
 
 	<licenses>

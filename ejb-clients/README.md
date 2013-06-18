@@ -18,7 +18,7 @@ The example is composed of multiple maven projects, each with a shared parent. T
 jboss-properies: different projects with jboss-ejb-client.poperties
 jboss-api      : Different Main classes to demonstrate the usage of the ejb-client API
 remote-naming  : Different clients which are using the (deprecated) remote-naming-project
-ic-properties  : Different Main classes to demonstrate how the new scoped InitialContext can be used
+scoped-context : Different Main classes to demonstrate how the new scoped InitialContext can be used (since EAP6.1 / AS7.2)
 server         : Additional server application to demonstrate property transfer from client to server
 
 
@@ -212,7 +212,7 @@ The MultiUserJBossRemoteClient will invoke an EJB with different credentials by 
 The output will show that the EJB will be invoked with different usernames.
 
 
-Access the **ic-properties** applications
+Access the **scoped-context** applications
 ---------------------
 
 The different clients show the behaviour of the new client feature 'scoped context', introduced by the feature request EJBCLIENT-34 and implemented 
@@ -224,7 +224,7 @@ The different Main-classes show the behavior of the scoped InitialContext lookup
 Be sure that the preparations are done:
 
 1. Make sure that the installation and deployment of the multi-server quickstart is successful as described above.
-2. navigate to the ic-properties root directory of this quickstart.
+2. navigate to the scoped-context root directory of this quickstart.
 
 The MultithreadClient will run a single application with two threads where each Thread will access a different server and check whether
 the response is not of a different one.
