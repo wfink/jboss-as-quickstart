@@ -49,7 +49,6 @@
 		<dependency>
 		  <groupId>org.jboss</groupId>
 		  <artifactId>jboss-ejb-client</artifactId>
-		  <version>1.0.16.Final-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 	
