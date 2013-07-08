@@ -36,6 +36,7 @@
 
 	<modules>
 		<module>simple-clustered</module>
+		<module>clustered-with-interceptor</module>
 	</modules>
 </project>
 
