@@ -56,6 +56,7 @@ public class ClusterClient {
   private void callAppOne(int noOfInvocations) throws NamingException {
     final HashMap<String, Integer> invocations = new HashMap<String, Integer>();
     AppOne appOne = (AppOne)context.lookup("ejb:appone/ejb//AppOneBean!" + AppOne.class.getName());
+    LOGGER.info("AFTER LOOKUP");
     for (int i = 0; i < noOfInvocations; i++) {
       final String result = appOne.getJBossNodeName();
       LOGGER.info("Invocation AppOne #"+i+" at node "+result);

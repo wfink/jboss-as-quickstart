@@ -57,6 +57,7 @@ public class SimpleJBossRemoteClient {
 
         Level l = debug == null ? Level.OFF : debug.booleanValue() ? Level.ALL : Level.INFO;
         Logger.getLogger("").setLevel(l);
+        Logger.getLogger("").getHandlers()[0].setLevel(Level.ALL);
         LOGGER.setLevel(Boolean.TRUE.equals(debug) ? Level.FINEST : Level.INFO);
     }
 
