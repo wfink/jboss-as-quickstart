@@ -183,5 +183,7 @@ public class AppOneClusterJBossApiClient {
     for (int i = 1; i < 21; i++) {
       client.invoke();
     }
+    
+    AppOneClusterJBossApiClient.LOGGER.info("Finished!");
   }
 }
