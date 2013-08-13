@@ -54,7 +54,8 @@
        maven repository. -->
     <!-- <jboss.bom.version>1.0.0.Final-redhat-1</jboss.bom.version>> -->
     <!-- 7.1.2.Final/EAP6.0.0 is the first ejb-client with multiple servers for the PROVIDER_URL -->
-    <jboss.client.bom.version>7.1.2.Final</jboss.client.bom.version>
+    <!-- 7.2.0.Final/EAP6.1.0 is the first released ejb-client with scoped-context and needed fixes -->
+    <jboss.client.bom.version>7.2.0.Final</jboss.client.bom.version>
 
     <!-- other plugin versions -->
 
